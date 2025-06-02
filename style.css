@@ -1,0 +1,75 @@
+/* Estilo para tela de login */
+body.login-body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #0D1B2A, #1B263B);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.box {
+    position: relative;
+    width: 400px;
+    padding: 40px;
+    background: #1B263B;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.box h2 {
+    color: #E63946;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.input-box {
+    position: relative;
+    margin: 30px 0;
+}
+.input-box input {
+    width: 100%;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    color: white;
+    font-size: 1em;
+}
+.input-box span {
+    position: absolute;
+    left: 0;
+    padding: 10px 0;
+    pointer-events: none;
+    transition: 0.5s;
+    color: #ccc;
+}
+.input-box input:focus ~ span,
+.input-box input:valid ~ span {
+    transform: translateY(-20px);
+    font-size: 0.8em;
+    color: #E63946;
+}
+.btn {
+    background-color: #E63946;
+    border: none;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    font-size: 1.1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn:hover {
+    background-color: #c62828;
+}
+.imp-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+.imp-links a {
+    color: #A8DADC;
+    text-decoration: none;
+}
