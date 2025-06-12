@@ -92,6 +92,13 @@ $usuarios = $stmt->fetchAll();
 <body>
 <div class="container">
     <h2>Usuários</h2>
+
+<a href="criar_usuario.php" style="text-decoration:none;">
+    <button style="margin-bottom: 20px; background-color: #dc3545; border: none; color: white; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
+        + Adicionar Usuário
+    </button>
+</a>
+
     <a href="ponto.php" class="voltar">← Voltar</a>
     <table>
         <tr>

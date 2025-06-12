@@ -115,7 +115,7 @@
 <a href="logout.php" class="logout-btn">Sair</a>
 
     <h1>Relógio de Ponto</h1>
-    <img class="avatar" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/d9/23/fa/d923fa83-a9bc-5d8d-0daa-15e1a5c8f0e2/AppIcon-0-0-1x_U007emarketing-0-10-0-0-85-220.png/230x0w.webp" alt="Foto do Usuário" />
+    <img class="avatar" src="https://play-lh.googleusercontent.com/0Llc3tZhC3Kx2BsBs8IBThlF0GcZVF9GC63WxQgR1HsN81X2TeBzLNGtXCvWuFHom-I=w240-h480-rw" alt="Foto do Usuário" />
     <div class="empresa">Zart Supermecados</div>
     <input type="text" id="nome" placeholder="Digite seu número" required>
     <div id="clock-container">

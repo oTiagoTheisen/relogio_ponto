@@ -1,46 +1,62 @@
+
 <?php
-session_start();
-require_once 'conexao.php';
+include("conexao.php");
 
-if (!isset($_SESSION['logado']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: login.php");
-    exit;
+if (isset($_GET["id"])) {
+    $id = $_GET["id"];
+    $sql = "SELECT * FROM usuarios WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $usuario = $resultado->fetch_assoc();
 }
 
-$id = $_GET['id'] ?? null;
-if (!$id) {
-    echo "Usuário inválido.";
-    exit;
-}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id = $_POST["id"];
+    $nome = $_POST["nome"];
+    $matricula = $_POST["matricula"];
+    $tipo = $_POST["tipo"];
 
-$stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = ?");
-$stmt->execute([$id]);
-$usuario = $stmt->fetch();
+    $sql = "UPDATE usuarios SET nome=?, matricula=?, tipo=? WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssi", $nome, $matricula, $tipo, $id);
 
-if (!$usuario) {
-    echo "Usuário não encontrado.";
-    exit;
+    if ($stmt->execute()) {
+        header("Location: usuarios.php");
+        exit();
+    } else {
+        echo "Erro ao atualizar usuário: " . $conn->error;
+    }
 }
 ?>
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Editar Usuário</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body style="background:#1B263B; color:white; font-family:sans-serif; padding:30px;">
+<body style="background-color: #0b1b2a; font-family: Arial, sans-serif; color: white; text-align: center; padding: 50px;">
     <h2>Editar Usuário</h2>
-    <form action="controllers/salvar_usuario.php" method="POST">
-        <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
-        <p><input type="text" name="nome" value="<?= $usuario['nome'] ?>" required></p>
-        <p><input type="text" name="matricula" value="<?= $usuario['matricula'] ?>" readonly></p>
-        <p>
-            <select name="tipo">
-                <option value="funcionario" <?= $usuario['tipo'] === 'funcionario' ? 'selected' : '' ?>>Funcionário</option>
-                <option value="admin" <?= $usuario['tipo'] === 'admin' ? 'selected' : '' ?>>Administrador</option>
-            </select>
-        </p>
-        <button type="submit">Salvar Alterações</button>
+    <form method="POST" style="display: inline-block; text-align: left; background: #1c2b3a; padding: 30px; border-radius: 10px;">
+        <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
+
+        <label>Nome:</label><br>
+        <input type="text" name="nome" value="<?php echo $usuario['nome']; ?>" required><br><br>
+
+        <label>Matrícula:</label><br>
+        <input type="text" name="matricula" value="<?php echo $usuario['matricula']; ?>" required><br><br>
+
+        <label>Tipo:</label><br>
+        <select name="tipo" required>
+            <option value="funcionario" <?php if($usuario['tipo'] == 'funcionario') echo 'selected'; ?>>Funcionário</option>
+            <option value="admin" <?php if($usuario['tipo'] == 'admin') echo 'selected'; ?>>Admin</option>
+        </select><br><br>
+
+        <button type="submit" style="background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Salvar Alterações</button>
+        <a href="usuarios.php" style="margin-left: 10px; color: #ccc;">Cancelar</a>
     </form>
 </body>
 </html>
