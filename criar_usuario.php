@@ -1,6 +1,7 @@
-
 <?php
 include("conexao.php");
+
+$mensagemErro = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST["nome"];
@@ -8,21 +9,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $senha = password_hash($_POST["senha"], PASSWORD_DEFAULT);
     $tipo = $_POST["tipo"];
 
-    $sql = "INSERT INTO usuarios (nome, matricula, senha, tipo) VALUES (?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $nome, $matricula, $senha, $tipo);
+    try {
+        // Verificar se matrícula já existe
+        $sqlCheck = "SELECT COUNT(*) FROM usuarios WHERE matricula = ?";
+        $stmtCheck = $pdo->prepare($sqlCheck);
+        $stmtCheck->execute([$matricula]);
+        $existe = $stmtCheck->fetchColumn();
 
-    if ($stmt->execute()) {
-        header("Location: usuarios.php");
-        exit();
-    } else {
-        echo "Erro ao cadastrar usuário: " . $conn->error;
+        if ($existe > 0) {
+            $mensagemErro = "Essa matrícula já está cadastrada!";
+        } else {
+            $sql = "INSERT INTO usuarios (nome, matricula, senha, tipo) VALUES (?, ?, ?, ?)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$nome, $matricula, $senha, $tipo]);
+            header("Location: usuarios.php");
+            exit();
+        }
+    } catch (PDOException $e) {
+        $mensagemErro = "Erro ao cadastrar: " . $e->getMessage();
     }
-
-    $stmt->close();
-    $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -33,6 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body style="background-color: #0b1b2a; color: white; font-family: Arial; text-align: center; padding: 50px;">
     <h2>Adicionar Usuário</h2>
+	<?php if (!empty($mensagemErro)) : ?>
+    <div style="background-color: #ff4d4d; color: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center;">
+        <?php echo $mensagemErro; ?>
+    </div>
+<?php endif; ?>
+
     <form method="POST" style="display: inline-block; text-align: left; background: #1c2b3a; padding: 30px; border-radius: 10px;">
         <label>Nome:</label><br>
         <input type="text" name="nome" required><br><br>
